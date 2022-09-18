@@ -12,6 +12,11 @@ import { useForm } from "react-hook-form";
 export function BackLogin() {
   return (
     <div className="flex flex-col w-full pt-24 gap-4 items-center justify-center">
+      <img
+        className="mx-auto h-12 w-auto"
+        src="/assets/images/logo_login.png"
+        alt="teros"
+      />
       <h1>Ops, parece que você não está logado</h1>
       <div className="w-1/6">
         <button className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
