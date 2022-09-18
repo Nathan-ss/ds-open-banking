@@ -8,14 +8,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const url: any = process.env.API_PARTICIPANTES;
-
+  /*
   const session = await getToken({
     req,
     secret: process.env.SECRET,
   });
   if (!session) {
     return res.status(401).json("Auth Required");
-  }
+  }*/
   const response = await axios.get(url);
   const data = await response.data;
 

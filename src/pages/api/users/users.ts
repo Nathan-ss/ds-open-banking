@@ -3,13 +3,13 @@ import { getToken } from "next-auth/jwt";
 import { connectToDatabase } from "../../../utils/mongodb";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getToken({
+  /* const session = await getToken({
     req,
     secret: process.env.SECRET,
   });
   if (!session) {
     return res.status(401).json("Auth Required");
-  }
+  }*/
   try {
     const { method } = req;
 

@@ -3,10 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 
 export const authOptions: NextAuthOptions = {
-  //adapter: MongoDBAdapter(clientPromise),
   session: { strategy: "jwt" },
 
-  // Configure one or more authentication providers
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || "unknown-client-id",

@@ -14,7 +14,7 @@ const VerifyUser = async (session: any) => {
   const { vUser, setVuser } = useContext(VarContext);
 
   if (session) {
-    const response = await axios.get("../api/users/users", {});
+    const response = await axios.get("./../api/users/users", {});
     const data = await response.data;
     data.map((user: any, i: Number) => {
       if (user.email === session.user.email) {
