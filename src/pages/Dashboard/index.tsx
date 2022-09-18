@@ -67,9 +67,18 @@ const Dashboard: NextPage = (data) => {
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
                       {/* Profile dropdown */}
-                      <Menu as="div" className="relative ml-3">
+                      <Menu
+                        as="div"
+                        className={!session ? "relative ml-3" : "hidden"}
+                      >
                         <div>
-                          <Menu.Button className="flex gap-2 max-w-xs items-center rounded-sm bg-white text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-cyan-900">
+                          <Menu.Button
+                            className={
+                              !session
+                                ? "hidden"
+                                : "flex gap-2 max-w-xs items-center rounded-sm bg-white text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-cyan-900"
+                            }
+                          >
                             <h1 className="text-black">
                               {session?.user?.name}
                             </h1>
@@ -180,7 +189,7 @@ const Dashboard: NextPage = (data) => {
         </Disclosure>
 
         <main>
-          <div className="flex flex-col justify-center p-4 md:px-10">
+          <div className="flex flex-col h-full justify-center items-center p-4 md:px-10">
             <Table session={session} />
           </div>
         </main>
