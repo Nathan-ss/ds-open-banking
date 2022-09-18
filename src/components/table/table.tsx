@@ -7,6 +7,7 @@ import { VarContext } from "../../context/context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 import Modal from "../modal/modal";
+import { useForm } from "react-hook-form";
 
 export function BackLogin() {
   return (
@@ -101,15 +102,80 @@ const Table = (props: any): JSX.Element => {
       setinitialPosition(initialPosition - 10);
     }
   }
+  //------------------------------------pesquisar
+  const [inputState, setInput] = useState<string | null>();
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (input) => {
+    setfinalyPosition(data.data.length);
+    setinitialPosition(0);
+    search(input);
+  };
+
+  function search(dataInput: string) {
+    const input: string = dataInput.search
+      .toString()
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // texto escrito
+
+    setInput(input);
+    if (input.trim() == "") {
+      setfinalyPosition(10);
+
+      setInput(null);
+    }
+  }
 
   if (!props.session) return BackLogin();
   if (error) return <h1>Sem resultados da api</h1>;
   if (!data) return Loading();
+
   return (
     <div>
       <Modal />
+
       <div className="min-h-screen">
         <div className="p-2 md:p8">
+          <form onSubmit={handleSubmit(onSubmit)} className=" my-5">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-300 sr-only dark:text-gray-300"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                {...register("search")}
+                type="search"
+                id="default-search"
+                className="block p-4 pl-10 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:ring-cyan-500 focus:border-cyan-500 bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+                placeholder="Search Mockups, Logos..."
+              />
+              <button
+                type="submit"
+                className="text-white absolute right-2.5 bottom-2.5 bg-cyan-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-cyan-900 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
           <div className="bg-white rounded-lg shadow-lg overflow-auto">
             <table className="table-auto w-full ">
               <thead className="bg-cyan-800 text-white shadow-lg text-sm md:text-sm lg:text-md">
@@ -125,71 +191,150 @@ const Table = (props: any): JSX.Element => {
               </thead>
               <tbody>
                 {data.data.map((info: any, i: Number | any) => {
-                  if (i <= finalyPosition && i >= initialPosition) {
-                    return (
-                      <tr
-                        id={i}
-                        className={
-                          i % 2 == 0
-                            ? " bg-gray-100 hover:bg-slate-200 text-sm md:text-md lg:text-md"
-                            : "bg-white hover:bg-slate-200 text-sm md:text-md lg:text-md"
-                        }
-                        key={i}
-                      >
-                        <td className="px-2 py-3 flex flex-col justify-start items-center gap-2 md:h-24 md:flex-row">
-                          <div className="hidden md:flex w-32 h-3/4">
-                            <img
-                              src={
+                  if (inputState) {
+                    if (
+                      info.OrganisationName.toUpperCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .includes(inputState) == true
+                    ) {
+                      return (
+                        <tr
+                          id={info.OrganisationName}
+                          className={
+                            i % 2 == 0
+                              ? " bg-gray-100 hover:bg-slate-200 text-sm md:text-md lg:text-md"
+                              : "bg-white hover:bg-slate-200 text-sm md:text-md lg:text-md"
+                          }
+                          key={i}
+                        >
+                          <td className="px-2 py-3 flex flex-col justify-start items-center gap-2 md:h-24 md:flex-row">
+                            <div className="hidden md:flex w-32 h-3/4">
+                              <img
+                                src={
+                                  info.AuthorisationServers[0]
+                                    .CustomerFriendlyLogoUri
+                                }
+                                alt=""
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <strong>
+                              {info.OrganisationName.toUpperCase()}
+                            </strong>
+                          </td>
+                          <td className="px-2 py-3 ">
+                            <a
+                              href={
                                 info.AuthorisationServers[0]
-                                  .CustomerFriendlyLogoUri
+                                  .OpenIDDiscoveryDocument
                               }
-                              alt=""
-                              className="w-full h-full object-contain"
-                            />
-                          </div>
-                          <strong>{info.OrganisationName.toUpperCase()}</strong>
-                        </td>
-                        <td className="px-2 py-3 ">
-                          <a
-                            href={
-                              info.AuthorisationServers[0]
-                                .OpenIDDiscoveryDocument
-                            }
-                            className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {" "}
-                            DOC
-                          </a>
-                        </td>
+                              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {" "}
+                              DOC
+                            </a>
+                          </td>
 
-                        <td className="px-2 py-3 text-center">
-                          <button
-                            onClick={() =>
-                              modal(
-                                info.AuthorisationServers
-                                  .CustomerFriendlyDescription,
-                                info.RegistrationNumber,
-                                info.RegistrationId,
-                                info.Address,
-                                info.City,
-                                info.Postcode,
-                                info.Country,
-                                info.OrganisationName,
-                                info.RegisteredName,
-                                info.Status,
+                          <td className="px-2 py-3 text-center">
+                            <button
+                              onClick={() =>
+                                modal(
+                                  info.AuthorisationServers
+                                    .CustomerFriendlyDescription,
+                                  info.RegistrationNumber,
+                                  info.RegistrationId,
+                                  info.Address,
+                                  info.City,
+                                  info.Postcode,
+                                  info.Country,
+                                  info.OrganisationName,
+                                  info.RegisteredName,
+                                  info.Status,
+                                  info.AuthorisationServers[0]
+                                    .CustomerFriendlyLogoUri
+                                )
+                              }
+                              className="hover:bg-gray-300 hover:text-sky-500 p-1 px-2 font-bold rounded-lg focus:outline-none"
+                            >
+                              Ver mais
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  }
+                  if (!inputState) {
+                    if (i <= finalyPosition && i >= initialPosition) {
+                      return (
+                        <tr
+                          id={info.OrganisationName}
+                          className={
+                            i % 2 == 0
+                              ? " bg-gray-100 hover:bg-slate-200 text-sm md:text-md lg:text-md"
+                              : "bg-white hover:bg-slate-200 text-sm md:text-md lg:text-md"
+                          }
+                          key={i}
+                        >
+                          <td className="px-2 py-3 flex flex-col justify-start items-center gap-2 md:h-24 md:flex-row">
+                            <div className="hidden md:flex w-32 h-3/4">
+                              <img
+                                src={
+                                  info.AuthorisationServers[0]
+                                    .CustomerFriendlyLogoUri
+                                }
+                                alt=""
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <strong>
+                              {info.OrganisationName.toUpperCase()}
+                            </strong>
+                          </td>
+                          <td className="px-2 py-3 ">
+                            <a
+                              href={
                                 info.AuthorisationServers[0]
-                                  .CustomerFriendlyLogoUri
-                              )
-                            }
-                            className="hover:bg-gray-300 hover:text-sky-500 p-1 px-2 font-bold rounded-lg focus:outline-none"
-                          >
-                            Ver mais
-                          </button>
-                        </td>
-                      </tr>
-                    );
+                                  .OpenIDDiscoveryDocument
+                              }
+                              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {" "}
+                              DOC
+                            </a>
+                          </td>
+
+                          <td className="px-2 py-3 text-center">
+                            <button
+                              onClick={() =>
+                                modal(
+                                  info.AuthorisationServers
+                                    .CustomerFriendlyDescription,
+                                  info.RegistrationNumber,
+                                  info.RegistrationId,
+                                  info.Address,
+                                  info.City,
+                                  info.Postcode,
+                                  info.Country,
+                                  info.OrganisationName,
+                                  info.RegisteredName,
+                                  info.Status,
+                                  info.AuthorisationServers[0]
+                                    .CustomerFriendlyLogoUri
+                                )
+                              }
+                              className="hover:bg-gray-300 hover:text-sky-500 p-1 px-2 font-bold rounded-lg focus:outline-none"
+                            >
+                              Ver mais
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    }
                   }
                 })}
               </tbody>
