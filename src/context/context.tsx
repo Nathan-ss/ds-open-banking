@@ -9,8 +9,6 @@ type ContextType = {
   setModalState: (newState: boolean) => void;
   info: Array<string>;
   setInfo: (newState: Array<string>) => void;
-  vUser: any;
-  setVuser: (newState: any) => void;
 };
 
 const initialValue = {
@@ -18,8 +16,6 @@ const initialValue = {
   setModalState: () => {},
   info: [],
   setInfo: () => {},
-  vUser: {},
-  setVuser: () => {},
 };
 
 export const VarContext = createContext<ContextType>(initialValue);
@@ -27,9 +23,8 @@ export const VarContext = createContext<ContextType>(initialValue);
 export const Provider = ({ children }: PropType) => {
   const [modalState, setModalState] = useState(initialValue.modalState);
   const [info, setInfo] = useState(initialValue.info);
-  const [vUser, setVuser] = useState(initialValue.vUser);
 
-  const value = { modalState, setModalState, info, setInfo, vUser, setVuser };
+  const value = { modalState, setModalState, info, setInfo };
 
   return <VarContext.Provider value={value}> {children} </VarContext.Provider>;
 };

@@ -26,7 +26,7 @@ const Dashboard: NextPage = (data) => {
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon-16x16.png" />
       </Head>
-      <div className="min-h-full">
+      <div className="min-h-full w-screen">
         <Disclosure as="nav" className="bg-white shadow-md">
           {({ open }) => (
             <>
@@ -160,7 +160,7 @@ const Dashboard: NextPage = (data) => {
         </Disclosure>
 
         <main>
-          <div className="flex flex-col h-full justify-center items-center p-4 md:px-10">
+          <div className="flex flex-col h-full w-full justify-center items-center p-4 md:px-10">
             <Table session={session} />
           </div>
         </main>

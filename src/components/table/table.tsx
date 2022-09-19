@@ -139,7 +139,7 @@ const Table = (props: any): JSX.Element => {
     <div>
       <Modal />
 
-      <div className="min-h-screen">
+      <div className="min-h-screen w-screen px-4 md:px-10">
         <div className="p-2 md:p8">
           <form onSubmit={handleSubmit(onSubmit)} className=" my-5">
             <label

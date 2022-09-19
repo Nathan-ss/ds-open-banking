@@ -1,9 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
-import connectDB from "../../../database/connectDB";
-import Users from "../../../models/userModels";
-import bcrypt from "bcrypt";
 
 import { MongoClient } from "mongodb";
 
@@ -23,11 +20,16 @@ export const authOptions: NextAuthOptions = {
           email: string;
           password: string;
         };
+
+        //conectando com o banco
         const client = await MongoClient.connect(process.env.MONGODB_URI, {});
 
         const db = await client.db(process.env.MONGODB_DB);
+
+        //pagango a coleçao user
         const users = await db.collection("users");
-        //Find user with the email
+
+        //procurando email no banco
         const result = await users.findOne({
           email,
         });
@@ -37,14 +39,12 @@ export const authOptions: NextAuthOptions = {
           client.close();
           throw new Error("No user found with the email");
         }
-        //const checkPassword = await compare(password, result.password);
-        //Incorrect password - send response
+
         if (password != result.password) {
           client.close();
           throw new Error("Password doesnt match");
         }
-        //Else send success response
-        //client.close();
+
         return {
           id: result._id,
           name: result.name,
