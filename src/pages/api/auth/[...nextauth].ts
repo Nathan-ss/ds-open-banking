@@ -1,11 +1,13 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
-
 import { MongoClient } from "mongodb";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "../../../database/mongodb";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
+  adapter: MongoDBAdapter(clientPromise),
 
   providers: [
     GithubProvider({
@@ -33,7 +35,6 @@ export const authOptions: NextAuthOptions = {
         const result = await users.findOne({
           email,
         });
-        console.log(result);
 
         if (!result) {
           client.close();
@@ -49,6 +50,7 @@ export const authOptions: NextAuthOptions = {
           id: result._id,
           name: result.name,
           email: result.email,
+          image: result.img,
           role: "admin",
         };
       },

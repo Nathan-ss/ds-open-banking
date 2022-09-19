@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/_next")) return NextResponse.next();
 
   if (session) {
-    if (pathname === "/") {
+    if (pathname === "/" || pathname === "/Register") {
       req.nextUrl.pathname = "/Dashboard";
       return NextResponse.redirect(req.nextUrl);
     }

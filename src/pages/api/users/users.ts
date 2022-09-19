@@ -1,25 +1,29 @@
+import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
-import { connectToDatabase } from "../../../database/mongodb";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  /* const session = await getToken({
-    req,
-    secret: process.env.SECRET,
-  });
-  if (!session) {
-    return res.status(401).json("Auth Required");
-  }*/
   try {
     const { method } = req;
+    const body = JSON.parse(req.body);
+
+    if (!body.name || !body.email || !body.password) {
+      res.status(400).json({ error: "Não existe parâmetros para registro" });
+    }
 
     switch (method) {
-      case "GET":
-        // acesso ao mongodb e obter os usuarios do meu banco
-        const { db } = await connectToDatabase();
-        const data = await db.collection("users").find().toArray();
+      case "POST":
+        const client = await MongoClient.connect(process.env.MONGODB_URI, {});
 
-        res.status(200).json(data);
+        const db = client.db(process.env.MONGODB_DB);
+        // acesso ao mongodb e obter os usuarios do meu banco
+        const response = await db.collection("users").insertOne({
+          name: body.name,
+          email: body.email,
+          password: body.password,
+          img: "",
+        });
+        res.status(200).json("registro feito com sucesso");
+        //const data = await db.collection("users").find().toArray();
         break;
 
       default:
