@@ -135,7 +135,7 @@ const Initial: NextPage = () => {
                 </button>
                 <button
                   type="button"
-                  className="group relative flex w-full justify-center rounded-md border border-transparent fill-gray-600  hover:fill-cyan-700 bg-black py-2 px-4 text-sm font-medium text-white hover:bg-cyan-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="group relative flex w-full justify-center rounded-md border border-transparent fill-gray-600  hover:fill-gray-500 bg-black py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   onClick={() => signIn("github")}
                 >
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">

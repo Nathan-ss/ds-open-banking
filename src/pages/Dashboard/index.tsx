@@ -4,8 +4,6 @@ import Table from "../../components/table/table";
 import { Fragment, useContext, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
-import { VarContext } from "../../context/context";
 import Head from "next/head";
 
 const userNavigation = [{ name: "Sign out", href: "#" }];
