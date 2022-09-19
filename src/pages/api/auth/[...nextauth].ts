@@ -1,6 +1,11 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
+import connectDB from "../../../database/connectDB";
+import Users from "../../../models/userModels";
+import bcrypt from "bcrypt";
+
+import { MongoClient } from "mongodb";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -18,25 +23,34 @@ export const authOptions: NextAuthOptions = {
           email: string;
           password: string;
         };
+        const client = await MongoClient.connect(process.env.MONGODB_URI, {});
 
-        if (email == "user@email.com" || password == "user1") {
-          return {
-            id: "1234",
-            name: "user1",
-            email: "user@email.com",
-            role: "admin",
-          };
+        const db = await client.db(process.env.MONGODB_DB);
+        const users = await db.collection("users");
+        //Find user with the email
+        const result = await users.findOne({
+          email,
+        });
+        console.log(result);
+
+        if (!result) {
+          client.close();
+          throw new Error("No user found with the email");
         }
-        if (email == "user2@email.com" || password == "user2") {
-          return {
-            id: "1234",
-            name: "user2",
-            email: "user2@email.com",
-            role: "admin",
-          };
-        } else {
-          throw new Error("invalid credentials");
+        //const checkPassword = await compare(password, result.password);
+        //Incorrect password - send response
+        if (password != result.password) {
+          client.close();
+          throw new Error("Password doesnt match");
         }
+        //Else send success response
+        //client.close();
+        return {
+          id: result._id,
+          name: result.name,
+          email: result.email,
+          role: "admin",
+        };
       },
     }),
   ],
@@ -44,6 +58,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/Dashboard",
     error: "/",
   },
+
   callbacks: {
     jwt(params) {
       // update token

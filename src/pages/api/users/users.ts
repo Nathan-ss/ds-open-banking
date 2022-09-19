@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-import { connectToDatabase } from "../../../utils/mongodb";
+import { connectToDatabase } from "../../../database/mongodb";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /* const session = await getToken({

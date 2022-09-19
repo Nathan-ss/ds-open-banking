@@ -10,30 +10,8 @@ import Head from "next/head";
 
 const userNavigation = [{ name: "Sign out", href: "#" }];
 
-const VerifyUser = async (session: any) => {
-  const { vUser, setVuser } = useContext(VarContext);
-
-  if (session) {
-    const response = await axios.get("./../api/users/users", {});
-    const data = await response.data;
-    data.map((user: any, i: Number) => {
-      if (user.email === session.user.email) {
-        setVuser({
-          name: (String = user.name),
-          email: (String = user.email),
-          img: (String = user.img),
-        });
-      }
-    });
-  }
-};
-
 const Dashboard: NextPage = (data) => {
   const { data: session } = useSession();
-
-  VerifyUser(session);
-
-  const { vUser } = useContext(VarContext);
 
   function logOff() {
     signOut({
@@ -69,7 +47,7 @@ const Dashboard: NextPage = (data) => {
                       {/* Profile dropdown */}
                       <Menu
                         as="div"
-                        className={!session ? "relative ml-3" : "hidden"}
+                        className={session ? "relative ml-3" : "hidden"}
                       >
                         <div>
                           <Menu.Button
@@ -82,19 +60,12 @@ const Dashboard: NextPage = (data) => {
                             <h1 className="text-black">
                               {session?.user?.name}
                             </h1>
-                            {session?.user?.image ? (
-                              <img
-                                className="h-8 w-8 rounded-full"
-                                src={session?.user?.image?.toString()}
-                                alt=""
-                              />
-                            ) : (
-                              <img
-                                className="h-8 w-8 rounded-full"
-                                src={vUser.img}
-                                alt=""
-                              />
-                            )}
+
+                            <img
+                              className="h-8 w-8 rounded-full"
+                              src={session?.user?.image?.toString()}
+                              alt=""
+                            />
                           </Menu.Button>
                         </div>
                         <Transition
