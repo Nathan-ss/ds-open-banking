@@ -16,6 +16,7 @@ const Register: NextPage = () => {
 
       body: JSON.stringify(data),
     });
+
     router.push("./");
   };
 

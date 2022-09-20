@@ -15,15 +15,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const client = await MongoClient.connect(process.env.MONGODB_URI, {});
 
         const db = client.db(process.env.MONGODB_DB);
-        // acesso ao mongodb e obter os usuarios do meu banco
-        const response = await db.collection("users").insertOne({
-          name: body.name,
+        const users = await db.collection("users");
+        const result = await users.findOne({
           email: body.email,
-          password: body.password,
-          img: "",
         });
-        res.status(200).json("registro feito com sucesso");
-        //const data = await db.collection("users").find().toArray();
+        // acesso ao mongodb e obter os usuarios do meu banco
+        if (result == null) {
+          const response = await db.collection("users").insertOne({
+            name: body.name,
+            email: body.email,
+            password: body.password,
+            img: "",
+          });
+          res.status(200).json("registro feito com sucesso");
+        }
+        if (result) {
+          res.status(400).json("Email existente");
+        }
         break;
 
       default:

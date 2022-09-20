@@ -136,10 +136,10 @@ const Table = (props: any): JSX.Element => {
   if (!data) return Loading();
 
   return (
-    <div>
+    <div className="flex flex-col justify-center">
       <Modal />
 
-      <div className="min-h-screen w-screen px-4 md:px-10">
+      <div className="min-h-screen w-screen px-4 md:px-12">
         <div className="p-2 md:p8">
           <form onSubmit={handleSubmit(onSubmit)} className=" my-5">
             <label
