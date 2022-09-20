@@ -81,13 +81,21 @@ const Table = (props: any): JSX.Element => {
     setModalState(true);
   }
   const [dataLength, setDataLength] = useState<Number | null | undefined>();
-  const { data, error } = useSWR(url, async (url) => {
-    const response = await axios.get(url);
-    const data = await response.data;
-    setDataLength(data.data.length);
+  const { data, error } = useSWR(
+    url,
+    async (url) => {
+      const response = await axios.get(url);
+      const data = await response.data;
+      setDataLength(data.data.length);
 
-    return data;
-  });
+      return data;
+    },
+    {
+      revalidateIfStale: true,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+    }
+  );
 
   const [n, setN] = useState(0);
   const [initialPosition, setinitialPosition] = useState(0);
