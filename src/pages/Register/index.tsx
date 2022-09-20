@@ -13,7 +13,6 @@ const Register: NextPage = () => {
     console.log(data);
     await fetch("/api/users/users", {
       method: "POST",
-
       body: JSON.stringify(data),
     });
 
